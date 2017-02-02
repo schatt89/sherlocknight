@@ -20,10 +20,13 @@ library(RColorBrewer)
 # Данные
 
 
-Период: с 3 по 16 января (в этот промежуток попала 2 и 3 серия) \n
-Твитов: 376 056 с хештегом #ночьшерлока \n
-Авторов: 43576 => в среднем 9 твитов на человека, использующего #ночьшерлока \n
-Средняя длина твита: 6-7 слов \n
+Период: с 3 по 16 января (в этот промежуток попала 2 и 3 серия)
+
+Твитов: 376 056 с хештегом #ночьшерлока
+
+Авторов: 43576 => в среднем 9 твитов на человека, использующего #ночьшерлока
+
+Средняя длина твита: 6-7 слов 
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -92,11 +95,33 @@ ggplot() +
   geom_freqpoly(data = dplyr::filter(df_second, has_john == T), aes(x = date, colour = "j"), binwidth = 500) + 
   geom_freqpoly(data = dplyr::filter(df_second, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 500) + 
   geom_freqpoly(data = dplyr::filter(df_second, has_molly == T), aes(x = date, colour = "mol"), binwidth = 500) +
+  annotate("rect", 
+           xmin = lubridate::as_datetime("2017-01-09 00:58:00") + hours(2),
+           xmax = lubridate::as_datetime("2017-01-09 02:58:00") + hours(2),
+           ymin = 0,
+           ymax = Inf,
+           alpha = 0.1,
+           fill = "red") + 
   xlab("время") + ylab("количество твитов") + 
   ggtitle("#НочьШерлока в часы показа второй серии") +
   scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли"))
 
 ```
+
+```{r}
+
+ggplot()  +
+  annotate("rect", 
+           xmin = lubridate::as_datetime("2017-01-09 00:58:00") + hours(2),
+           xmax = lubridate::as_datetime("2017-01-09 02:58:00") + hours(2),
+           ymin = 0,
+           ymax = Inf,
+           alpha = 0.1,
+           fill = "red") + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_hudson == T), aes(x = date, colour = "h"), binwidth = 500)
+
+```
+
 # Время показа третей серии
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
