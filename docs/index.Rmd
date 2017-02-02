@@ -1,0 +1,152 @@
+---
+title: "Sherlock night"
+output: html_document
+author: "Schatt and Ildar Belyalov"
+---
+
+
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+library(twitteR)
+library(httr)
+library(lubridate)
+library(ggplot2)
+library(stringr)
+library(RColorBrewer)
+
+```
+
+
+# Данные
+
+
+Период: с 3 по 16 января (в этот промежуток попала 2 и 3 серия)
+
+Твитов: 376 056 с хештегом #ночьшерлока
+
+Авторов: 43576 => в среднем 9 твитов на человека, использующего #ночьшерлока
+
+Средняя длина твита: 6-7 слов 
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(lubridate)
+
+df = read.csv("~/sherlock_clean.csv", sep = ",", header = T)
+
+df = dplyr::select(df, text, retweets, favorites, date, id, username, day, hour, minute, has_image, has_sliv, blyat, textid)
+df$date = ymd_hms(df$date)
+df14 = dplyr::filter(df, (day == 14 & hour >= 12) | (day == 15 & hour <= 4))
+
+# Все твиты с этим хэштегом по часам за все время
+ggplot() + geom_freqpoly(data = df, aes(x = date), colour="red", binwidth = 3600) + xlab("дата") + ylab("количество твитов") + ggtitle("#НочьШерлока")
+
+```
+
+
+# День слива
+
+По этой картиночке можно увидеть, когда слили серию и люди начали материться по этому поводу
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Твиты с матом 14-15 числа, как раз, когда слили серию
+ggplot() + 
+  geom_freqpoly(data = dplyr::filter(df14, blyat == T), aes(x = date, colour = "mat"), binwidth = 500) + 
+  geom_freqpoly(data = dplyr::filter(df14, has_sliv == T), aes(x = date, colour = "sliv"), binwidth = 500) + 
+  xlab("время") + ylab("количество твитов") + 
+  ggtitle("#НочьШерлока в день слива третей серии") +
+  scale_color_discrete(name = "Упоминание", breaks = c("mat", "sliv"), labels = c("Мат", "Слив"))
+```
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+
+df$has_sherlock = ifelse((str_detect(df$text, " шерлок ") | str_detect(df$text, " шерлоку ") | str_detect(df$text, " шерлока ")), TRUE, FALSE)
+
+df$has_moriarti = ifelse((str_detect(df$text, "мориарти ") | str_detect(df$text, "джим ") | str_detect(df$text, "джиму ")), TRUE, FALSE)
+
+df$has_molly = ifelse(str_detect(df$text, "молли "), TRUE, FALSE)
+
+df$has_hudson = ifelse(str_detect(df$text, "миссис хадсон ") | str_detect(df$text, "хадсон "), TRUE, FALSE)
+
+df$has_john = ifelse((str_detect(df$text, "джон ") | str_detect(df$text, "джону ") | str_detect(df$text, "джона ") | str_detect(df$text, "ватсон ") | str_detect(df$text, "ватсону ")), TRUE, FALSE)
+
+
+df$has_mery = ifelse((str_detect(df$text, "мэри ") | str_detect(df$text, "мери ")), TRUE, FALSE)
+
+
+df$has_ever = ifelse((str_detect(df$text, "эвер ") | str_detect(df$text, "эвэр ")), TRUE, FALSE)
+
+df$has_mycroft = ifelse((str_detect(df$text, "майкрофт ") | str_detect(df$text, "майкрофта ") | str_detect(df$text, "майкрофту ")), TRUE, FALSE)
+
+```
+
+# Время показа второй серии
+
+Как упоминали героев во время показа серии
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+df_second = dplyr::filter(df, (day == 8 & hour >= 23) | (day == 9 & hour <= 2))
+
+ggplot() + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_john == T), aes(x = date, colour = "j"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_molly == T), aes(x = date, colour = "mol"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_ever == T), aes(x = date, colour = "e"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 300) +
+  annotate("rect", 
+           xmin = lubridate::as_datetime("2017-01-09 00:58:00") + hours(2),
+           xmax = lubridate::as_datetime("2017-01-09 02:58:00") + hours(2),
+           ymin = 0,
+           ymax = Inf,
+           alpha = 0.1,
+           fill = "red") + 
+  xlab("время") + ylab("количество твитов") + 
+  ggtitle("#НочьШерлока в часы показа второй серии") +
+  scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e", "my"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли","Эвер", "Майкрофт"))
+
+```
+
+
+# Время показа третей серии
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+df_third = dplyr::filter(df, (day == 15 & hour >= 23) | (day == 16 & hour <= 2))
+
+ggplot() + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_john == T), aes(x = date, colour = "j"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_molly == T), aes(x = date, colour = "mol"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_ever == T), aes(x = date, colour = "e"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 300) +
+   annotate("rect", 
+           xmin = lubridate::as_datetime("2017-01-16 00:58:00") + hours(2),
+           xmax = lubridate::as_datetime("2017-01-16 02:58:00") + hours(2),
+           ymin = 0,
+           ymax = Inf,
+           alpha = 0.1,
+           fill = "red") + 
+  xlab("время") + ylab("количество твитов") + 
+  ggtitle("#НочьШерлока в часы показа третей серии") +
+  scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e", "my"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли", "Эвер", "Майкрофт"))
+```
+
+
+# Topic modeling
+
+Мы применили LDA, чтобы посмотреть, о чем писал фандом все это время и узнать, какие темы являются наиболее популярные. Ниже пресдставлена интерактивная модель бла бла бла
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+htmltools::includeHTML("./index.html")
+
+```
