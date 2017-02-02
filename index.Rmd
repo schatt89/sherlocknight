@@ -1,10 +1,14 @@
 ---
 title: "Sherlock night"
-output: html_document
 author: "Schatt and Ildar Belyalov"
+date: "`r format(Sys.time(), '%d %B, %Y, %H:%M')`"
+output: html_document
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'docs';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), out_dir, 'index.html')) })
 ---
-
-
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 library(twitteR)
@@ -15,7 +19,6 @@ library(stringr)
 library(RColorBrewer)
 
 ```
-
 
 # Данные
 
@@ -147,6 +150,6 @@ ggplot() +
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
-htmltools::includeHTML("./index.html")
+htmltools::includeHTML("./docs/lda.html")
 
 ```
