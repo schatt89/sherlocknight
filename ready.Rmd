@@ -77,6 +77,7 @@ df$has_mery = ifelse((str_detect(df$text, "мэри ") | str_detect(df$text, "м
 
 df$has_ever = ifelse((str_detect(df$text, "эвер ") | str_detect(df$text, "эвэр ")), TRUE, FALSE)
 
+df$has_mycroft = ifelse((str_detect(df$text, "майкрофт ") | str_detect(df$text, "майкрофта ") | str_detect(df$text, "майкрофту ")), TRUE, FALSE)
 
 ```
 
@@ -95,6 +96,8 @@ ggplot() +
   geom_freqpoly(data = dplyr::filter(df_second, has_john == T), aes(x = date, colour = "j"), binwidth = 500) + 
   geom_freqpoly(data = dplyr::filter(df_second, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 500) + 
   geom_freqpoly(data = dplyr::filter(df_second, has_molly == T), aes(x = date, colour = "mol"), binwidth = 500) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_ever == T), aes(x = date, colour = "e"), binwidth = 500) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 500) +
   annotate("rect", 
            xmin = lubridate::as_datetime("2017-01-09 00:58:00") + hours(2),
            xmax = lubridate::as_datetime("2017-01-09 02:58:00") + hours(2),
@@ -104,23 +107,10 @@ ggplot() +
            fill = "red") + 
   xlab("время") + ylab("количество твитов") + 
   ggtitle("#НочьШерлока в часы показа второй серии") +
-  scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли"))
+  scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e", "my"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли","Эвер", "Майкрофт"))
 
 ```
 
-```{r}
-
-ggplot()  +
-  annotate("rect", 
-           xmin = lubridate::as_datetime("2017-01-09 00:58:00") + hours(2),
-           xmax = lubridate::as_datetime("2017-01-09 02:58:00") + hours(2),
-           ymin = 0,
-           ymax = Inf,
-           alpha = 0.1,
-           fill = "red") + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_hudson == T), aes(x = date, colour = "h"), binwidth = 500)
-
-```
 
 # Время показа третей серии
 
@@ -136,10 +126,17 @@ ggplot() +
   geom_freqpoly(data = dplyr::filter(df_third, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 500) + 
   geom_freqpoly(data = dplyr::filter(df_third, has_molly == T), aes(x = date, colour = "mol"), binwidth = 500) +
   geom_freqpoly(data = dplyr::filter(df_third, has_ever == T), aes(x = date, colour = "e"), binwidth = 500) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 500) +
+   annotate("rect", 
+           xmin = lubridate::as_datetime("2017-01-16 00:58:00") + hours(2),
+           xmax = lubridate::as_datetime("2017-01-16 02:58:00") + hours(2),
+           ymin = 0,
+           ymax = Inf,
+           alpha = 0.1,
+           fill = "red") + 
   xlab("время") + ylab("количество твитов") + 
   ggtitle("#НочьШерлока в часы показа третей серии") +
-  scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли", "Эвер")) +
-  scale_fill_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли", "Эвер"))
+  scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e", "my"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли", "Эвер", "Майкрофт"))
 ```
 
 
