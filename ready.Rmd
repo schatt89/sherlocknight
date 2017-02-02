@@ -39,7 +39,7 @@ df$date = ymd_hms(df$date)
 df14 = dplyr::filter(df, (day == 14 & hour >= 12) | (day == 15 & hour <= 4))
 
 # Все твиты с этим хэштегом по часам за все время
-ggplot() + geom_freqpoly(data = df, aes(x = date), fill="#FF9999", colour="black", binwidth = 3500) + xlab("дата") + ylab("количество твитов") + ggtitle("#НочьШерлока")
+ggplot() + geom_freqpoly(data = df, aes(x = date), colour="red", binwidth = 3600) + xlab("дата") + ylab("количество твитов") + ggtitle("#НочьШерлока")
 
 ```
 
@@ -90,14 +90,14 @@ df$has_mycroft = ifelse((str_detect(df$text, "майкрофт ") | str_detect(d
 df_second = dplyr::filter(df, (day == 8 & hour >= 23) | (day == 9 & hour <= 2))
 
 ggplot() + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_hudson == T), aes(x = date, colour = "h"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_mery == T), aes(x = date, colour = "me"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_john == T), aes(x = date, colour = "j"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_molly == T), aes(x = date, colour = "mol"), binwidth = 500) +
-  geom_freqpoly(data = dplyr::filter(df_second, has_ever == T), aes(x = date, colour = "e"), binwidth = 500) +
-  geom_freqpoly(data = dplyr::filter(df_second, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 500) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_john == T), aes(x = date, colour = "j"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_second, has_molly == T), aes(x = date, colour = "mol"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_ever == T), aes(x = date, colour = "e"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 300) +
   annotate("rect", 
            xmin = lubridate::as_datetime("2017-01-09 00:58:00") + hours(2),
            xmax = lubridate::as_datetime("2017-01-09 02:58:00") + hours(2),
@@ -119,14 +119,14 @@ ggplot() +
 df_third = dplyr::filter(df, (day == 15 & hour >= 23) | (day == 16 & hour <= 2))
 
 ggplot() + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_hudson == T), aes(x = date, colour = "h"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_mery == T), aes(x = date, colour = "me"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_john == T), aes(x = date, colour = "j"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_molly == T), aes(x = date, colour = "mol"), binwidth = 500) +
-  geom_freqpoly(data = dplyr::filter(df_third, has_ever == T), aes(x = date, colour = "e"), binwidth = 500) +
-  geom_freqpoly(data = dplyr::filter(df_third, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 500) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_john == T), aes(x = date, colour = "j"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) + 
+  geom_freqpoly(data = dplyr::filter(df_third, has_molly == T), aes(x = date, colour = "mol"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_ever == T), aes(x = date, colour = "e"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 300) +
    annotate("rect", 
            xmin = lubridate::as_datetime("2017-01-16 00:58:00") + hours(2),
            xmax = lubridate::as_datetime("2017-01-16 02:58:00") + hours(2),
