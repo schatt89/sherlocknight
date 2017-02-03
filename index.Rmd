@@ -3,13 +3,16 @@ title: "Sherlock Night"
 author: "Anna Golovchenko and Ildar Belyalov"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
-knit: (function(inputFile, encoding) { 
+knit: (function(inputFile, encoding) {
       out_dir <- 'docs';
       rmarkdown::render(inputFile,
-                        encoding=encoding, 
+                        encoding=encoding,
                         output_file=file.path(dirname(inputFile), out_dir, 'index.html')) })
 ---
 
+<style>
+  .left {left:-100px; }
+</style>
 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
 library(twitteR)
@@ -22,24 +25,24 @@ library(RColorBrewer)
 ```
 
 
-# Данные
+## Данные {.row}
 
-Данные были извлечены из Твиттера. Мы начали собирать все твиты с хештегом #НочьШерлока, которые держался на первом месте топа по России в дни премьер, 16го января и дошли до 3х часов ночи 3го числа, после чего Твиттер перестал отдавать данные. Политика соцсети такова, что из него можно вытащить данные не старше двух недель. Поэтому, к сожалению, шумиха по первой серии не попала в нашу базу.
+Данные были извлечены из Твиттера. Мы начали собирать все твиты с хештегом #НочьШерлока, которые держался на первом месте топа по России в дни премьер, 16го января и дошли до 3х часов ночи 3го числа, после чего Твиттер перестал отдавать данные. Политика соцсети такова, что из нее можно вытащить данные не старше двух недель. Поэтому, к сожалению, шумиха по первой серии не попала в нашу базу.
 
 
 **Период:** с 3 по 16 января (в этот промежуток попала 2 и 3 серия)
 
 **Твитов:** 376 056 с хештегом *#ночьшерлока*
 
-**Авторов:** 43576 => в среднем 9 твитов на человека
+**Авторов:** 43576 
 
-**Средняя длина твита:** 6-7 слов 
+**Средняя длина твита:** 6-7 слов
 
+### {.col-md-6}
+На графике изображено распределение твитов по дням. **Первый пик** - показ второй серии, в это время частота твитов с хештегом достигает 75 тыс. в час. **Маленький бугорочек** рядом с 16 числом - день, когда слили третью серию. Слив заметно повлиял на активность фандома на следующий за ним день премьеры на первом канале. Частота твитов с хештегом во время премьеры на первом достигает лишь 45 тыс.
 
-На графике изображено распределение твитов по дням. **Первый пик** - показ второй серии, в это время частота твитов с хештегом достигает 75 тыс. в час. **Маленький бугорочек** рядом с 16 числом - день, когда слили третью серию. Слив заметно повлиял на активность фандома на следующий за ним день премьеры на первом канале. Частота твитов с хештегом во время показа на первом достигает лишь 45 тыс. 
-
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+### {.col-md-6}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, }
 library(lubridate)
 
 df = read.csv("~/sherlock_clean.csv", sep = ",", header = T)
@@ -54,24 +57,24 @@ ggplot() + geom_freqpoly(data = df, aes(x = date), colour="red", binwidth = 3600
 ```
 
 
-# День слива
+## День слива {.row}
 
-
+### {.col-md-6}
 Напомним, что финальную серию сезона в озвучке первого канала слили в интернет на 40 с лишним часов до мировой премьеры.
 
-Рассмотрим поближе день слива. На этой картиночке можно увидеть, когда новость о сливе серии просочилась в медиа и как люди начали активно браниться по этому поводу. Первый твит со словом "слив" появляется в 16:28. В районе 21го часа, когда в новостях на первом объявили о сливе, количество мата слегка возрастает :)
+Рассмотрим поближе день слива. На этой картиночке можно увидеть, когда новость о сливе серии просочилась в медиа и как люди начали активно браниться по этому поводу. Первый твит со словом "слив" появляется в 16:28. В районе 9 часов вечера, когда в новостях на первом объявили о сливе, количество брани слегка возрастает :)
 
 *Идите в (лесом) те, кто слил серию и те, кто про нее пишут принципиально до премьеры смотреть не стану*
   - возмущается кто-то из твиттерских одним из первых.
 
-
+### {.col-md-6}
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Твиты с матом 14-15 числа, как раз, когда слили серию
 
-ggplot() + 
-  geom_freqpoly(data = dplyr::filter(df14, blyat == T), aes(x = date, colour = "mat"), binwidth = 500) + 
-  geom_freqpoly(data = dplyr::filter(df14, has_sliv == T), aes(x = date, colour = "sliv"), binwidth = 500) + 
-  xlab("время") + ylab("количество твитов") + 
+ggplot() +
+  geom_freqpoly(data = dplyr::filter(df14, blyat == T), aes(x = date, colour = "mat"), binwidth = 500) +
+  geom_freqpoly(data = dplyr::filter(df14, has_sliv == T), aes(x = date, colour = "sliv"), binwidth = 500) +
+  xlab("время") + ylab("количество твитов") +
   ggtitle("#НочьШерлока в день слива третей серии") +
   scale_color_discrete(name = "Упоминание", breaks = c("mat", "sliv"), labels = c("Брань", "Слив"))
 
@@ -100,38 +103,40 @@ df$has_mycroft = ifelse((str_detect(df$text, "майкрофт ") | str_detect(d
 
 ```
 
-# Время показа второй серии
+## Время показа второй серии
 
-Упоминания героев во время премьеры второй серии. Можем порадоваться **триумфу миссис Хадсон**, которая просто превзошла всех! До **1600** упоминаний за 5 минут
+Упоминания героев во время премьеры второй серии.
+
+Можем порадоваться **триумфу миссис Хадсон**, которая просто превзошла всех! До **1600** упоминаний за 5 минут
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 df_second = dplyr::filter(df, (day == 8 & hour >= 23) | (day == 9 & hour <= 2))
 
-ggplot() + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_john == T), aes(x = date, colour = "j"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_second, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) + 
+ggplot() +
+  geom_freqpoly(data = dplyr::filter(df_second, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_john == T), aes(x = date, colour = "j"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_second, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) +
   geom_freqpoly(data = dplyr::filter(df_second, has_molly == T), aes(x = date, colour = "mol"), binwidth = 300) +
   geom_freqpoly(data = dplyr::filter(df_second, has_ever == T), aes(x = date, colour = "e"), binwidth = 300) +
   geom_freqpoly(data = dplyr::filter(df_second, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 300) +
-  annotate("rect", 
+  annotate("rect",
            xmin = lubridate::as_datetime("2017-01-09 00:58:00") + hours(2),
            xmax = lubridate::as_datetime("2017-01-09 02:58:00") + hours(2),
            ymin = 0,
            ymax = Inf,
            alpha = 0.1,
-           fill = "red") + 
-  xlab("время") + ylab("количество твитов") + 
+           fill = "red") +
+  xlab("время") + ylab("количество твитов") +
   ggtitle("#НочьШерлока в часы показа второй серии") +
   scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e", "my"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли","Эвер", "Майкрофт"))
 
 ```
 
 
-# Время показа третьей серии
+## Время показа третьей серии
 
 Супер-звездой "Последнего Дела" оказался **непревзойденный Мориарти**, отметившийся 1100 упоминаниями в 5 минут.
 
@@ -140,35 +145,36 @@ ggplot() +
 
 df_third = dplyr::filter(df, (day == 15 & hour >= 23) | (day == 16 & hour <= 2))
 
-ggplot() + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_john == T), aes(x = date, colour = "j"), binwidth = 300) + 
-  geom_freqpoly(data = dplyr::filter(df_third, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) + 
+ggplot() +
+  geom_freqpoly(data = dplyr::filter(df_third, has_hudson == T), aes(x = date, colour = "h"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_sherlock == T), aes(x = date, colour = "sh"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_mery == T), aes(x = date, colour = "me"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_john == T), aes(x = date, colour = "j"), binwidth = 300) +
+  geom_freqpoly(data = dplyr::filter(df_third, has_moriarti == T), aes(x = date, colour = "mo"), binwidth = 300) +
   geom_freqpoly(data = dplyr::filter(df_third, has_molly == T), aes(x = date, colour = "mol"), binwidth = 300) +
   geom_freqpoly(data = dplyr::filter(df_third, has_ever == T), aes(x = date, colour = "e"), binwidth = 300) +
   geom_freqpoly(data = dplyr::filter(df_third, has_mycroft == T), aes(x = date, colour = "my"), binwidth = 300) +
-   annotate("rect", 
+   annotate("rect",
            xmin = lubridate::as_datetime("2017-01-16 00:58:00") + hours(2),
            xmax = lubridate::as_datetime("2017-01-16 02:58:00") + hours(2),
            ymin = 0,
            ymax = Inf,
            alpha = 0.1,
-           fill = "red") + 
-  xlab("время") + ylab("количество твитов") + 
+           fill = "red") +
+  xlab("время") + ylab("количество твитов") +
   ggtitle("#НочьШерлока в часы показа третьей серии") +
   scale_color_discrete(name = "Упоминание", breaks = c("h", "sh", "me", "j", "mo", "mol", "e", "my"), labels = c("Хадсон", "Шерлок", "Мэри", "Джон", "Мориарти", "Молли", "Эвер", "Майкрофт"))
 ```
 
 
-# Тематическое моделирование - магия или сатанааа
-## Предупреждение: ненормативная лексика
 
-Мы применили специальный алгоритм для выделения тем из текстов (LDA), чтобы посмотреть, о чем писал фандом все это время и какие темы преобладают в обсуждениях, получилось 20 тем. На оси координат внизу каждой теме соответствует кружочек, его размер отражает долю этой темы в собранной базе твитов. Чем дальше темы друг от друга в системе координат, тем дальше они по смыслу. Например, посередине мы наблюдаем пересекающиеся 9 и 10 тему - похожи они тем, что они обе относятся к Мориарти. На кружочки можно тыкать, тогда справа появляется отсортированный список слов, которые соответствуют данной теме. Над списком слов есть ползунок, который тоже можно дергать. Он отвечает за баланс слов в теме, чем правее - тем сильнее учитывается частота слов во всей базе твитов, а не в конкретной тему, поэтому, когда ползунок стоит на 1, во многих темах всплывает слово Шерлок.
+## Тематическое моделирование - магия белая или черная {.row}
+### Предупреждение: ненормативная лексика
+
+Мы применили специальный алгоритм для выделения тем из текстов (LDA), чтобы посмотреть, о чем писал фандом все это время и какие темы преобладают в обсуждениях, получилось 20 тем. На оси координат внизу каждой теме соответствует кружочек, его размер отражает долю этой темы в собранной базе твитов. Чем дальше темы друг от друга в системе координат, тем дальше они по смыслу. Например, посередине мы наблюдаем пересекающиеся 9 и 10 тему - похожи они тем, что обе относятся к Мориарти. На кружочки можно тыкать, тогда справа появляется отсортированный список слов, которые соответствуют данной теме. Над списком слов есть ползунок, который тоже можно дергать. Он отвечает за баланс слов в теме, чем правее - тем сильнее учитывается частота слов во всей базе твитов, а не в конкретной тему, поэтому, когда ползунок стоит на 1, во многих темах всплывает слово Шерлок.
 
 
-
+### {.left}
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 htmltools::includeHTML("./docs/lda.html")
@@ -177,29 +183,28 @@ htmltools::includeHTML("./docs/lda.html")
 
 
 
-# На что обратить внимание
+## На что обратить внимание
 
 
 * Первая тема, характерная для 11,4% всех твиттов - это нытье о том, что завтра рано вставать в школу
 * Эта тема имеет много общего с темой №4, посвященной обсуждению слива серии - около 10%
 * Вторая тема - о любви. О всевозможной любви. Первым делом фигурирует любовный треугольник Шерлок - Джон - Мэри, а дальше сами смотрите
 * Тема номер 11 прекрасна настолько, насколько крута Миссис Хадсон
-* Перетяните рычажок на 0 и наведите на тему 3. По первым словам вы поймете, чем на самом деле является этот сериал
+* Перетяните ползунок на 0 и наведите на тему 3. По первым словам вы поймете, чем на самом деле является этот сериал
 * В 18 теме скомпоновался случайно попавший в базу украинский язык
 * Тема 14 вся о "программе самоуничтожения Холмса младшего"
 
 
 
-# P.S.
+## P.S.
 
 
-**Привет майнору Data Science** в Питерской Вышке и его замечательным преподавателям. Отдельное **спасибо Сироткину АВ** за помощь в подготовке материала <3
+**Привет майнору Data Science** в Питерской Вышке и его замечательным преподавателям. **Спасибо Сироткину АВ** за помощь в подготовке материала <3
 
 **Ссылки на авторов:**
 
 <https://vk.com/theotheo>
-[Ildar]() 
+[Ildar]()
 
 <https://vk.com/schatt95>
 [Anna]()
-
